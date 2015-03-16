@@ -1,0 +1,27 @@
+body {
+	background-color:#c0f9fe;
+	font-size:30px;
+	font-family: Sans-Serif;
+	text-align:center;
+}
+.letters { 
+	font-size:40px;
+}
+.wrong{
+	color:red;
+	height:40px; 
+}
+#guessedletter {
+	width:40px;
+}
+[type = "button"] {
+	width:80px;
+	height:40px;
+}
+progress {    /* styling of the progress bar */
+	color:red; /* Internet Explorer 10 and later*/
+	-webkit-appearance: none;  /* override default style */
+}
+progress::-moz-progress-bar {   /*Firefox */
+	background-color:red; 
+}
