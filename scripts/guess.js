@@ -25,20 +25,27 @@ var game = {
   ]
 }; 
 
-var gameScore;
+var gameScore = 0;
+var firstCount;
+
 
 
 function remember (){ 
-    if (Number(localStorage.memoryScore !==0)){
+    if (localStorage.memorySource  !==0){
         gameScore = Number(localStorage.memoryScore);
-          console.log("local storage remember = " + localStorage.memoryScore)
-          console.log("local storage remember = " + gameScore)
-          console.log("#score " + $('#score').text().value);
+          console.log("1local storage remember = " + localStorage.memoryScore)
+          console.log("1local game remember = " + gameScore)
+          console.log("1#score " + $('#score').text().value);
         $('#score').text().value = gameScore;
-
     } else {
-    var gameScore = 0;
+     gameScore = 0;
+    localStorage.memoryScore = gameScore;
+     console.log("2local storage remember = " + localStorage.memoryScore)
+          console.log("2local game remember = " + gameScore)
+          console.log("#2score " + $('#score').text().value);
+     
    }
+    firstCount  = false;
 }
 
 
@@ -159,7 +166,7 @@ game.outcome = function () {
     if (game.over) { 
         localStorage.memoryScore = gameScore;
         console.log("local storage = " + localStorage.memoryScore)
-    console.log("gamescore = " + gameScore)
+        console.log("gamescore = " + gameScore)
         game.restart();
 }
 
@@ -170,8 +177,9 @@ game.outcome = function () {
 $(document).ready(function () {
     //gameScore =  localStorage.gameScore;
 
+   console.log("firstCount =" + firstCount);
+    remember();
    
-     remember();
     game.restart();
     $('#guessbutton').click(game.play);
     $('#restart').click(game.restartTally);
