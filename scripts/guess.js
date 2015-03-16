@@ -25,21 +25,38 @@ var game = {
   ]
 }; 
 
- $('#score').text('');
- var gameScore = 0;
-   
+var gameScore;
+
+
+function remember (){ 
+    if (Number(localStorage.memoryScore !==0)){
+        gameScore = Number(localStorage.memoryScore);
+          console.log("local storage remember = " + localStorage.memoryScore)
+          console.log("local storage remember = " + gameScore)
+          console.log("#score " + $('#score').text().value);
+        $('#score').text().value = gameScore;
+
+    } else {
+    var gameScore = 0;
+   }
+}
+
+
  game.restartTally = function () {
    
      gameScore = gameScore - 1;
-    console.log(gameScore)
+     localStorage.memoryScore = gameScore;
+      console.log("local storage = " + localStorage.memoryScore)
+    console.log("gameScore = " + gameScore)
    $('#score').text(gameScore);
+    localStorage.memoryScore = gameScore;
     game.restart ();
  };
 
 game.restart = function () {
 
-
-        console.log(gameScore)
+        remember();
+        console.log("restart game score = " + gameScore)
          $('#score').text(gameScore);
 
     // Initialize the game at the beginning or after restart
@@ -129,17 +146,20 @@ game.outcome = function () {
     if (game.answer === game.display) {
         $('#wrong') .text('Congratulations!  You win');
         gameScore = gameScore + 3;
-        console.log(gameScore)
+        console.log("game.outcome gamescore = " + gameScore)
         game.over = true;  // game is over.  User has to restart to play again
     } else if (game.wrongCount >= 10) {
         $('#wrong') .text('No more guesses - the answer was ' + game.answer);
         gameScore = gameScore -2;
-        console.log(gameScore)
+         console.log(" 2nd game.outcome gamescore = " + gameScore)
          $('#score').text(gameScore);
         game.over = true;  // game is over.  User has to restart to play again
     }
     
     if (game.over) { 
+        localStorage.memoryScore = gameScore;
+        console.log("local storage = " + localStorage.memoryScore)
+    console.log("gamescore = " + gameScore)
         game.restart();
 }
 
@@ -148,6 +168,10 @@ game.outcome = function () {
 
 // Main program starts here
 $(document).ready(function () {
+    //gameScore =  localStorage.gameScore;
+
+   
+     remember();
     game.restart();
     $('#guessbutton').click(game.play);
     $('#restart').click(game.restartTally);
