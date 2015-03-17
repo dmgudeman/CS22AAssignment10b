@@ -1,5 +1,7 @@
 /*
- * Word Guessing Game - Solution
+ * Word Guessing Game and localStorage
+ * CS22A Assignment 10
+ * David M Gudeman
  *
  */
 'use strict';
@@ -25,46 +27,27 @@ var game = {
   ]
 }; 
 
-var gameScore = 0;
-var firstCount;
-
-
-
-function remember (){ 
-    if (localStorage.memorySource  !==0){
-        gameScore = Number(localStorage.memoryScore);
-          console.log("1local storage remember = " + localStorage.memoryScore)
-          console.log("1local game remember = " + gameScore)
-          console.log("1#score " + $('#score').text().value);
-        $('#score').text().value = gameScore;
-    } else {
-     gameScore = 0;
-    localStorage.memoryScore = gameScore;
-     console.log("2local storage remember = " + localStorage.memoryScore)
-          console.log("2local game remember = " + gameScore)
-          console.log("#2score " + $('#score').text().value);
-     
-   }
-    firstCount  = false;
-}
-
+var gameScore; // variable to hold the game score
 
  game.restartTally = function () {
+        
+    // adjust the score for a forced restart
+    gameScore = gameScore - 1;
+
+    // update the localStaorage variable
+    localStorage.memScore = gameScore;
+    
    
-     gameScore = gameScore - 1;
-     localStorage.memoryScore = gameScore;
-      console.log("local storage = " + localStorage.memoryScore)
-    console.log("gameScore = " + gameScore)
-   $('#score').text(gameScore);
-    localStorage.memoryScore = gameScore;
+    $('#score').text(gameScore);
+   
+    // move to the restart method
     game.restart ();
+     $('#wrong').text('');
  };
 
 game.restart = function () {
-
-        remember();
-        console.log("restart game score = " + gameScore)
-         $('#score').text(gameScore);
+     // show score on the webpage
+     $('#score').text(gameScore);
 
     // Initialize the game at the beginning or after restart
     // Initialize the game variables - the model
@@ -75,14 +58,14 @@ game.restart = function () {
     game.wrong = '';
     game.wrongCount = 0;
     game.over = false;
+
+    // update the localStorage variable to the new answerposition
+    localStorage.memAnsPosition = game.answerPosition;
   
     // Initialize the web page (the view)
     $('progress').val('0');  // initialize the progress bar
     $('#display').text(game.display);
-    $('#wrong').text('');
     $('#guessedletter').val('');
-
-
     
     // The focus method invoked on an input element allows the user to type in that input without having to click it.
     $('#guessedletter').focus();
@@ -151,35 +134,57 @@ game.play = function () {
 game.outcome = function () {
     // check if the game is won or lost
     if (game.answer === game.display) {
-        $('#wrong') .text('Congratulations!  You win');
+        $('#wrong').text('Congratulations!  You win');
+
+        // adjust the score
         gameScore = gameScore + 3;
-        console.log("game.outcome gamescore = " + gameScore)
+        // update the localStorage variable
+        localStorage.memScore = gameScore;
+      
         game.over = true;  // game is over.  User has to restart to play again
     } else if (game.wrongCount >= 10) {
-        $('#wrong') .text('No more guesses - the answer was ' + game.answer);
+        $('#wrong').text('No more guesses - the answer was ' + game.answer);
+
+        // adjust the score
         gameScore = gameScore -2;
-         console.log(" 2nd game.outcome gamescore = " + gameScore)
+          // update the localStorage variable
+        localStorage.memScore = gameScore;
+       
          $('#score').text(gameScore);
         game.over = true;  // game is over.  User has to restart to play again
     }
     
-    if (game.over) { 
-        localStorage.memoryScore = gameScore;
-        console.log("local storage = " + localStorage.memoryScore)
-        console.log("gamescore = " + gameScore)
+    if (game.over) {     
         game.restart();
-}
-
-         
+    }
+        
 };
 
 // Main program starts here
 $(document).ready(function () {
-    //gameScore =  localStorage.gameScore;
 
-   console.log("firstCount =" + firstCount);
-    remember();
-   
+    // initialize score in both localStorage variable and the gamescore when 
+    // localStorage is clear
+    if (localStorage.getItem("memScore") === null) {
+        localStorage.memScore = 0;
+        game.gameScore = 0;
+      } else {
+        // collect the gameScore from localStorage
+        gameScore = Number(localStorage.memScore);
+      }
+
+    // initialize answerPosition in both localStorage variable and the gamescore when 
+    // localStorage is clear
+     if (localStorage.getItem("memAnsPosition") === null) {
+        game.answerPosition= 0;
+        localStorage.memAnsPosition = 0;
+        
+     } else {
+         // collect the answerposition from localStorage and cast it
+        game.answerPosition = Number(localStorage.memAnsPosition);
+       
+      }
+
     game.restart();
     $('#guessbutton').click(game.play);
     $('#restart').click(game.restartTally);
