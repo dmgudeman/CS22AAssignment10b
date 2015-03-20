@@ -27,7 +27,7 @@ var game = {
   ]
 }; 
 
-var gameScore; // variable to hold the game score
+  var gameScore; // variable to hold the game score
 
  game.restartTally = function () {
         
@@ -167,7 +167,7 @@ $(document).ready(function () {
     // localStorage is clear
     if (localStorage.getItem("memScore") === null) {
         localStorage.memScore = 0;
-        game.gameScore = 0;
+        gameScore = 0;
       } else {
         // collect the gameScore from localStorage
         gameScore = Number(localStorage.memScore);
